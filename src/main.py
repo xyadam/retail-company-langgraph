@@ -1,0 +1,45 @@
+from rich.console import Console
+from typing import Any, cast
+from langchain_core.messages import HumanMessage
+from langchain_core.runnables import RunnableConfig
+from graph import build_graph
+from state import AgentState
+from console import print_report
+
+console = Console()
+
+
+###########################################################################
+##                             MAIN
+###########################################################################
+
+def main():
+    graph = build_graph()
+    thread_config = {"configurable": {"thread_id": "1"}}
+
+    console.print("\n[bold cyan]OpsFleet Data Analysis Agent[/bold cyan]")
+    console.print("[dim]Ask questions about sales, orders, products, and more.[/dim]")
+    console.print("[dim]Type 'quit' to exit.[/dim]\n")
+
+    while True:
+        question = console.input("[bold]You:[/bold] ").strip()
+        if not question:
+            continue
+        if question.lower() in ("quit", "exit"):
+            console.print("[dim]Goodbye![/dim]")
+            break
+
+        payload: dict[str, Any] = {
+            "user_question": question,
+            "messages": [HumanMessage(content=question)],
+            "rows": [],
+            "retry_count": 0,
+            "error_message": "",
+            "generated_sql": "",
+        }
+        result = graph.invoke(cast(AgentState, payload), config=cast(RunnableConfig, thread_config))
+        print_report(result["final_report"])
+
+
+if __name__ == "__main__":
+    main()

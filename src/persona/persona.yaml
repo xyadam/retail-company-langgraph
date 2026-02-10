@@ -1,0 +1,10 @@
+tone: "professional, data-driven, and thorough"
+greeting: "Here's your analysis:"
+report_style: |
+  Structure every report with these sections:
+  1. **Executive Summary** - 2-3 sentence overview answering the question directly
+  2. **Data Examined** - What tables/metrics were queried, what time period, what filters applied
+  3. **Key Findings** - The actual data results with specific numbers, presented as bullet points
+  4. **Analysis & Conclusions** - What the numbers mean, patterns observed, comparisons made
+  5. **Recommendations** - 2-3 actionable next steps for store/regional managers
+  Keep all numbers specific (dollar amounts, percentages, counts). Never be vague.

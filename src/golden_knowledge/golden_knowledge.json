@@ -1,0 +1,52 @@
+[
+  {
+    "question": "What are the top 5 products by revenue?",
+    "sql": "SELECT p.name, ROUND(SUM(oi.sale_price), 2) AS revenue FROM `bigquery-public-data.thelook_ecommerce.order_items` oi JOIN `bigquery-public-data.thelook_ecommerce.products` p ON oi.product_id = p.id GROUP BY p.name ORDER BY revenue DESC LIMIT 5",
+    "report": "Top 5 products by revenue: 1. North Face Apex Bionic Jacket ($20,769), 2. Nike Pro Compression Sports Bra ($18,060), 3. Canada Goose Chateau Jacket ($13,855), 4. True Religion Ricky Straight Jean ($12,122), 5. Canada Goose Solaris ($11,120). Outerwear and premium brands dominate, with the top product generating nearly 2x the fifth."
+  },
+  {
+    "question": "What is the monthly revenue trend for the last 12 months?",
+    "sql": "SELECT FORMAT_TIMESTAMP('%Y-%m', oi.created_at) AS month, ROUND(SUM(oi.sale_price), 2) AS revenue FROM `bigquery-public-data.thelook_ecommerce.order_items` oi WHERE oi.created_at >= TIMESTAMP(DATE_SUB(CURRENT_DATE(), INTERVAL 12 MONTH)) GROUP BY month ORDER BY month",
+    "report": "Revenue shows consistent month-over-month growth from $150K (Feb 2025) to $593K (Jan 2026), nearly 4x increase. December saw a seasonal spike to $490K. The upward trend indicates strong business growth."
+  },
+  {
+    "question": "Which product categories have the highest profit margins?",
+    "sql": "SELECT p.category, ROUND(AVG(oi.sale_price - p.cost), 2) AS avg_margin, ROUND(AVG((oi.sale_price - p.cost) / NULLIF(oi.sale_price, 0) * 100), 1) AS margin_pct FROM `bigquery-public-data.thelook_ecommerce.order_items` oi JOIN `bigquery-public-data.thelook_ecommerce.products` p ON oi.product_id = p.id GROUP BY p.category ORDER BY avg_margin DESC",
+    "report": "Outerwear & Coats leads with $81 avg margin (55.5%), followed by Suits & Sport Coats at $75 (60%). Blazers & Jackets rank third with $58 (62% margin rate). Low-margin categories: Socks ($8, 40%), Leggings ($11, 40%). Higher-priced categories yield better absolute margins."
+  },
+  {
+    "question": "How many orders were placed last month?",
+    "sql": "SELECT COUNT(*) AS order_count FROM `bigquery-public-data.thelook_ecommerce.orders` WHERE created_at >= TIMESTAMP(DATE_TRUNC(DATE_SUB(CURRENT_DATE(), INTERVAL 1 MONTH), MONTH)) AND created_at < TIMESTAMP(DATE_TRUNC(CURRENT_DATE(), MONTH))",
+    "report": "Last month saw 6,967 orders. This reflects the current monthly order volume baseline."
+  },
+  {
+    "question": "What is the average order value by traffic source?",
+    "sql": "SELECT u.traffic_source, ROUND(AVG(order_total), 2) AS avg_order_value, COUNT(*) AS order_count FROM (SELECT oi.order_id, oi.user_id, SUM(oi.sale_price) AS order_total FROM `bigquery-public-data.thelook_ecommerce.order_items` oi GROUP BY oi.order_id, oi.user_id) sub JOIN `bigquery-public-data.thelook_ecommerce.users` u ON sub.user_id = u.id GROUP BY u.traffic_source ORDER BY avg_order_value DESC",
+    "report": "AOV is similar across channels: Organic $87.80, Facebook $86.36, Search $86.23, Display $85.20, Email $84.71. Search drives the most volume (87K orders) while other channels contribute 5K-19K each. AOV variance is minimal (~$3), suggesting consistent customer behavior across acquisition channels."
+  },
+  {
+    "question": "Which countries generate the most revenue?",
+    "sql": "SELECT u.country, ROUND(SUM(oi.sale_price), 2) AS revenue FROM `bigquery-public-data.thelook_ecommerce.order_items` oi JOIN `bigquery-public-data.thelook_ecommerce.users` u ON oi.user_id = u.id GROUP BY u.country ORDER BY revenue DESC LIMIT 10",
+    "report": "China leads with $3.66M, followed by United States at $2.42M and Brasil at $1.58M. These top 3 account for the majority of revenue. South Korea ($571K), France ($517K), and UK ($495K) form the next tier. Geographic concentration is high in APAC and Americas."
+  },
+  {
+    "question": "What are the best-selling product categories?",
+    "sql": "SELECT p.category, COUNT(*) AS items_sold, ROUND(SUM(oi.sale_price), 2) AS revenue FROM `bigquery-public-data.thelook_ecommerce.order_items` oi JOIN `bigquery-public-data.thelook_ecommerce.products` p ON oi.product_id = p.id GROUP BY p.category ORDER BY revenue DESC LIMIT 10",
+    "report": "Outerwear & Coats leads revenue at $1.31M (9K items), followed by Jeans at $1.27M (12.8K items). Jeans sell more units but at lower price points. Sweaters ($836K), Swim ($647K), and Suits ($647K) round out the top 5. Tops & Tees sell 12K units but only $506K revenue, indicating high volume at low margins."
+  },
+  {
+    "question": "Who are our highest-spending customers?",
+    "sql": "SELECT u.id AS user_id, u.country, u.gender, ROUND(SUM(oi.sale_price), 2) AS total_spent, COUNT(*) AS total_orders FROM `bigquery-public-data.thelook_ecommerce.order_items` oi JOIN `bigquery-public-data.thelook_ecommerce.users` u ON oi.user_id = u.id GROUP BY u.id, u.country, u.gender ORDER BY total_spent DESC LIMIT 10",
+    "report": "Top spenders range from $1,481 to $1,832, with 5-10 orders each. All top 10 are male. Geographic spread: US (3), China (2), Japan, France, Germany, Belgium, Brasil. The top customer (user 94830, Japan) spent $1,832 across 7 orders."
+  },
+  {
+    "question": "What is the total revenue from the USA?",
+    "sql": "SELECT ROUND(SUM(oi.sale_price), 2) AS revenue FROM `bigquery-public-data.thelook_ecommerce.order_items` oi JOIN `bigquery-public-data.thelook_ecommerce.users` u ON oi.user_id = u.id WHERE u.country = 'United States'",
+    "report": "Total US revenue is $2,423,151. NOTE: In this database, 'USA' is stored as 'United States' - always use 'United States' in WHERE clauses."
+  },
+  {
+    "question": "Which countries sold the most jeans last month?",
+    "sql": "SELECT u.country, ROUND(SUM(oi.sale_price), 2) AS total_revenue_from_jeans FROM `bigquery-public-data.thelook_ecommerce.order_items` AS oi JOIN `bigquery-public-data.thelook_ecommerce.products` AS p ON oi.product_id = p.id JOIN `bigquery-public-data.thelook_ecommerce.users` AS u ON oi.user_id = u.id WHERE LOWER(p.name) LIKE '%jeans%' AND oi.created_at >= TIMESTAMP(DATE_TRUNC(DATE_SUB(CURRENT_DATE(), INTERVAL 1 MONTH), MONTH)) AND oi.created_at < TIMESTAMP(DATE_TRUNC(CURRENT_DATE(), MONTH)) GROUP BY u.country ORDER BY total_revenue_from_jeans DESC LIMIT 10",
+    "report": "China leads jeans sales with $9,763, followed by US at $6,787 and Brasil at $2,934. These top 3 account for ~75% of jeans revenue. European markets (France, Spain, Germany) cluster around $1,200-1,265 each. Pattern mirrors overall revenue distribution with China and US dominating."
+  }
+]
