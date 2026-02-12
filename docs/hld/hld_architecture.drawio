@@ -1,131 +1,117 @@
-<mxfile host="65bd71144e">
-    <diagram name="HLD Architecture" id="hld1">
-        <mxGraphModel dx="619" dy="849" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1000" math="0" shadow="0">
-            <root>
-                <mxCell id="0"/>
-                <mxCell id="1" parent="0"/>
-                <mxCell id="title" value="OpsFleet Data Analysis Agent — High-Level Design (HLD)" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=20;fontStyle=1;fontColor=#333333;" parent="1" vertex="1">
-                    <mxGeometry x="400" y="20" width="540" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="client" value="Client&#xa;(CLI / Web Frontend)&#xa;&#xa;Sends: user_id + question&#xa;Receives: executive report" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;verticalAlign=middle;align=center;spacingTop=4;" parent="1" vertex="1">
-                    <mxGeometry x="540" y="80" width="220" height="100" as="geometry"/>
-                </mxCell>
-                <mxCell id="agent_container" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#333333;strokeWidth=2;dashed=0;" parent="1" vertex="1">
-                    <mxGeometry x="340" y="240" width="620" height="340" as="geometry"/>
-                </mxCell>
-                <mxCell id="agent_title" value="LangGraph Agent (Python)" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=16;fontStyle=1;fontColor=#333333;" parent="1" vertex="1">
-                    <mxGeometry x="500" y="248" width="200" height="30" as="geometry"/>
-                </mxCell>
-                <mxCell id="node_router" value="Router&#xa;(Intent Classification)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=0;align=center;" parent="1" vertex="1">
-                    <mxGeometry x="360" y="290" width="140" height="50" as="geometry"/>
-                </mxCell>
-                <mxCell id="node_golden" value="Golden Knowledge&#xa;Retrieval" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=0;align=center;" parent="1" vertex="1">
-                    <mxGeometry x="520" y="290" width="140" height="50" as="geometry"/>
-                </mxCell>
-                <mxCell id="node_sql_gen" value="SQL Generator&#xa;+ Validator (QA)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=0;align=center;" parent="1" vertex="1">
-                    <mxGeometry x="680" y="290" width="140" height="50" as="geometry"/>
-                </mxCell>
-                <mxCell id="node_executor" value="SQL Executor&#xa;+ PII Filter" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=0;align=center;" parent="1" vertex="1">
-                    <mxGeometry x="840" y="290" width="100" height="50" as="geometry"/>
-                </mxCell>
-                <mxCell id="node_prefs" value="User Preferences&#xa;Loader" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=0;align=center;" parent="1" vertex="1">
-                    <mxGeometry x="360" y="370" width="140" height="50" as="geometry"/>
-                </mxCell>
-                <mxCell id="node_report" value="Report Writer&#xa;(Persona-aware)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=0;align=center;" parent="1" vertex="1">
-                    <mxGeometry x="520" y="370" width="140" height="50" as="geometry"/>
-                </mxCell>
-                <mxCell id="node_report_mgr" value="Report Manager&#xa;(CRUD + Delete Confirmation)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=0;align=center;" parent="1" vertex="1">
-                    <mxGeometry x="680" y="370" width="160" height="50" as="geometry"/>
-                </mxCell>
-                <mxCell id="node_logger" value="Interaction Logger" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=0;align=center;" parent="1" vertex="1">
-                    <mxGeometry x="360" y="450" width="140" height="50" as="geometry"/>
-                </mxCell>
-                <mxCell id="node_pref_updater" value="User Preference&#xa;Updater&#xa;(batch of 10)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=0;align=center;" parent="1" vertex="1">
-                    <mxGeometry x="520" y="450" width="140" height="50" as="geometry"/>
-                </mxCell>
-                <mxCell id="node_general" value="General&#xa;Response" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=0;align=center;" parent="1" vertex="1">
-                    <mxGeometry x="680" y="450" width="120" height="50" as="geometry"/>
-                </mxCell>
-                <mxCell id="gemini" value="Gemini 2.5 Flash&#xa;(LLM API)&#xa;&#xa;Routing, SQL Generation,&#xa;SQL Validation, Report Writing,&#xa;Preference Evaluation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;fontStyle=1;verticalAlign=middle;align=center;spacingTop=4;" parent="1" vertex="1">
-                    <mxGeometry x="40" y="320" width="220" height="130" as="geometry"/>
-                </mxCell>
-                <mxCell id="bigquery" value="Google BigQuery&#xa;(Read-Only)&#xa;&#xa;thelook_ecommerce&#xa;orders, order_items,&#xa;products, users" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;verticalAlign=middle;align=center;size=12;boundedLbl=1;" parent="1" vertex="1">
-                    <mxGeometry x="1060" y="260" width="180" height="140" as="geometry"/>
-                </mxCell>
-                <mxCell id="appdb_container" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fafafa;strokeColor=#333333;strokeWidth=2;dashed=0;" parent="1" vertex="1">
-                    <mxGeometry x="220" y="660" width="860" height="280" as="geometry"/>
-                </mxCell>
-                <mxCell id="appdb_title" value="Application Database (PostgreSQL)" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=16;fontStyle=1;fontColor=#333333;" parent="1" vertex="1">
-                    <mxGeometry x="440" y="668" width="280" height="30" as="geometry"/>
-                </mxCell>
-                <mxCell id="tbl_golden" value="golden_knowledge&#xa;&#xa;question (TEXT)&#xa;sql (TEXT)&#xa;report (TEXT)&#xa;embedding (VECTOR)" style="shape=table;startSize=30;container=0;collapsible=0;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=0;fillColor=#d5e8d4;strokeColor=#82b366;whiteSpace=wrap;html=1;fontSize=11;" parent="1" vertex="1">
-                    <mxGeometry x="240" y="710" width="180" height="120" as="geometry"/>
-                </mxCell>
-                <mxCell id="tbl_prefs" value="user_preferences&#xa;&#xa;user_id (TEXT, PK)&#xa;preference_profile (JSONB)&#xa;updated_at (TIMESTAMP)" style="shape=table;startSize=30;container=0;collapsible=0;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=0;fillColor=#dae8fc;strokeColor=#6c8ebf;whiteSpace=wrap;html=1;fontSize=11;" parent="1" vertex="1">
-                    <mxGeometry x="440" y="710" width="200" height="100" as="geometry"/>
-                </mxCell>
-                <mxCell id="tbl_logs" value="interaction_logs&#xa;&#xa;user_id, timestamp&#xa;question, generated_sql&#xa;result, report, latency&#xa;error_count, retry_count&#xa;pii_blocks, intent&#xa;processed_for_prefs (BOOL)" style="shape=table;startSize=30;container=0;collapsible=0;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=0;fillColor=#fff2cc;strokeColor=#d6b656;whiteSpace=wrap;html=1;fontSize=11;" parent="1" vertex="1">
-                    <mxGeometry x="240" y="845" width="200" height="150" as="geometry"/>
-                </mxCell>
-                <mxCell id="tbl_reports" value="saved_reports&#xa;&#xa;user_id (TEXT, FK)&#xa;title (TEXT)&#xa;report_content (TEXT)&#xa;created_at (TIMESTAMP)" style="shape=table;startSize=30;container=0;collapsible=0;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=0;fillColor=#f8cecc;strokeColor=#b85450;whiteSpace=wrap;html=1;fontSize=11;" parent="1" vertex="1">
-                    <mxGeometry x="660" y="710" width="190" height="120" as="geometry"/>
-                </mxCell>
-                <mxCell id="tbl_persona" value="persona_config&#xa;&#xa;tone (TEXT)&#xa;report_style (TEXT)&#xa;greeting (TEXT)&#xa;updated_by (TEXT)" style="shape=table;startSize=30;container=0;collapsible=0;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=0;fillColor=#e1d5e7;strokeColor=#9673a6;whiteSpace=wrap;html=1;fontSize=11;" parent="1" vertex="1">
-                    <mxGeometry x="870" y="710" width="180" height="120" as="geometry"/>
-                </mxCell>
-                <mxCell id="arr_client_agent" value="user_id + question" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=classic;endFill=1;startArrow=classic;startFill=1;strokeWidth=2;strokeColor=#6c8ebf;fontSize=11;fontStyle=0;labelBackgroundColor=#ffffff;" parent="1" source="client" target="agent_container" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="650" y="200" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="arr_agent_gemini" value="LLM calls&#xa;(routing, SQL gen,&#xa;validation, reports,&#xa;pref evaluation)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=classic;endFill=1;startArrow=classic;startFill=1;strokeWidth=2;strokeColor=#9673a6;fontSize=10;fontStyle=0;labelBackgroundColor=#ffffff;" parent="1" source="agent_container" target="gemini" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="arr_agent_bq" value="SQL queries&#xa;(read-only)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=classic;endFill=1;startArrow=classic;startFill=1;strokeWidth=2;strokeColor=#82b366;fontSize=11;fontStyle=0;labelBackgroundColor=#ffffff;" parent="1" source="agent_container" target="bigquery" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="arr_agent_db" value="Read/Write&#xa;(golden knowledge, preferences,&#xa;logs, reports, persona)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=classic;endFill=1;startArrow=classic;startFill=1;strokeWidth=2;strokeColor=#d6b656;fontSize=10;fontStyle=0;labelBackgroundColor=#ffffff;" parent="1" source="agent_container" target="appdb_container" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="arr_learning" value="System integrators curate&#xa;successful interactions into&#xa;golden knowledge" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic;endFill=1;strokeWidth=1;strokeColor=#82b366;dashed=1;dashPattern=8 4;fontSize=10;fontStyle=2;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="tbl_logs" target="tbl_golden" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <Array as="points">
-                            <mxPoint x="470" y="920"/>
-                            <mxPoint x="470" y="840"/>
-                            <mxPoint x="230" y="840"/>
-                            <mxPoint x="230" y="770"/>
-                        </Array>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="arr_pref_update" value="Batch update every&#xa;10 unprocessed interactions" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic;endFill=1;strokeWidth=1;strokeColor=#6c8ebf;dashed=1;dashPattern=8 4;fontSize=10;fontStyle=2;labelBackgroundColor=#ffffff;" parent="1" source="tbl_logs" target="tbl_prefs" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <Array as="points">
-                            <mxPoint x="540" y="920"/>
-                        </Array>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="admin_user" value="Admin / CEO&#xa;(Non-developer)" style="shape=mxgraph.basic.person;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;fontStyle=1;align=center;" parent="1" vertex="1">
-                    <mxGeometry x="1120" y="700" width="80" height="80" as="geometry"/>
-                </mxCell>
-                <mxCell id="arr_admin_persona" value="Edit tone/style&#xa;(no code deploy)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=classic;endFill=1;strokeWidth=1;strokeColor=#9673a6;fontSize=10;fontStyle=2;labelBackgroundColor=#ffffff;" parent="1" source="admin_user" target="tbl_persona" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="manager_user" value="Store / Regional&#xa;Managers" style="shape=mxgraph.basic.person;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;fontStyle=1;align=center;" parent="1" vertex="1">
-                    <mxGeometry x="610" width="80" height="70" as="geometry"/>
-                </mxCell>
-                <mxCell id="arr_manager_client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=classic;endFill=1;strokeWidth=1;strokeColor=#6c8ebf;fontSize=10;" parent="1" source="manager_user" target="client" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="legend_container" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fafafa;strokeColor=#cccccc;strokeWidth=1;" parent="1" vertex="1">
-                    <mxGeometry x="1100" y="440" width="280" height="220" as="geometry"/>
-                </mxCell>
-                <mxCell id="legend_title" value="Requirements Mapping" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=12;fontStyle=1;fontColor=#333333;" parent="1" vertex="1">
-                    <mxGeometry x="1110" y="448" width="160" height="26" as="geometry"/>
-                </mxCell>
-                <mxCell id="legend_items" value="1. Hybrid Intelligence → Golden Knowledge&#xa;2. PII Masking → SQL Executor + PII Filter&#xa;3. High-Stakes Oversight → Report Manager&#xa;4. Continuous Improvement →&#xa;    User: Preference Updater (batch/10)&#xa;    System: Interaction Logs → Curation&#xa;5. Resilience → SQL retry loop (max 3)&#xa;6. Quality Assurance → SQL Validator&#xa;7. Logging → Interaction Logger&#xa;8. Persona → persona_config table" style="text;html=1;align=left;verticalAlign=top;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=10;fontStyle=0;fontColor=#555555;spacingLeft=4;" parent="1" vertex="1">
-                    <mxGeometry x="1110" y="474" width="260" height="170" as="geometry"/>
-                </mxCell>
-            </root>
-        </mxGraphModel>
-    </diagram>
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.2.9 Chrome/140.0.7339.249 Electron/38.7.2 Safari/537.36" version="29.2.9">
+  <diagram name="HLD Architecture" id="hld1">
+    <mxGraphModel dx="1540" dy="1028" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="client" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;verticalAlign=middle;align=center;spacingTop=4;" value="Client&#xa;(CLI / Web Frontend)&#xa;&#xa;Sends: user_id + question&#xa;Receives: executive report" vertex="1">
+          <mxGeometry height="100" width="220" x="540" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="agent_container" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#333333;strokeWidth=2;dashed=0;" value="" vertex="1">
+          <mxGeometry height="340" width="620" x="340" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="agent_title" parent="1" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=16;fontStyle=1;fontColor=#333333;" value="LangGraph Agent (Python)" vertex="1">
+          <mxGeometry height="30" width="200" x="500" y="248" as="geometry" />
+        </mxCell>
+        <mxCell id="node_router" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=0;align=center;" value="Router&#xa;(Intent Classification)" vertex="1">
+          <mxGeometry height="50" width="140" x="360" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="node_golden" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=0;align=center;" value="Golden Knowledge&#xa;Retrieval" vertex="1">
+          <mxGeometry height="50" width="140" x="520" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="node_sql_gen" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=0;align=center;" value="SQL Generator&#xa;+ Validator (QA)" vertex="1">
+          <mxGeometry height="50" width="140" x="680" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="node_executor" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=0;align=center;" value="SQL Executor&#xa;+ PII Filter" vertex="1">
+          <mxGeometry height="50" width="100" x="840" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="node_prefs" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=0;align=center;" value="User Preferences&#xa;Loader" vertex="1">
+          <mxGeometry height="50" width="140" x="360" y="370" as="geometry" />
+        </mxCell>
+        <mxCell id="node_report" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=0;align=center;" value="Report Writer&#xa;(Persona-aware)" vertex="1">
+          <mxGeometry height="50" width="140" x="520" y="370" as="geometry" />
+        </mxCell>
+        <mxCell id="node_report_mgr" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=0;align=center;" value="Report Manager&#xa;(CRUD + Delete Confirmation)" vertex="1">
+          <mxGeometry height="50" width="140" x="680" y="370" as="geometry" />
+        </mxCell>
+        <mxCell id="node_logger" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=0;align=center;" value="Interaction Logger" vertex="1">
+          <mxGeometry height="50" width="140" x="360" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="node_pref_updater" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=0;align=center;" value="User Preference&#xa;Updater&#xa;(batch of 10)" vertex="1">
+          <mxGeometry height="50" width="140" x="520" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="node_general" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=0;align=center;" value="General&#xa;Response" vertex="1">
+          <mxGeometry height="50" width="120" x="680" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="gemini" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;fontStyle=1;verticalAlign=middle;align=center;spacingTop=4;" value="Gemini 2.5 Flash&#xa;(LLM API)&#xa;&#xa;Routing, SQL Generation,&#xa;SQL Validation, Report Writing,&#xa;Preference Evaluation" vertex="1">
+          <mxGeometry height="130" width="220" x="40" y="345" as="geometry" />
+        </mxCell>
+        <mxCell id="bigquery" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;verticalAlign=middle;align=center;size=12;boundedLbl=1;" value="Google BigQuery&lt;br&gt;(Read-Only)&lt;div&gt;&lt;br/&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="120" width="180" x="1100" y="350" as="geometry" />
+        </mxCell>
+        <mxCell id="appdb_container" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fafafa;strokeColor=#333333;strokeWidth=2;dashed=0;" value="" vertex="1">
+          <mxGeometry height="310" width="860" x="220" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="appdb_title" parent="1" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=16;fontStyle=1;fontColor=#333333;" value="Application Database (PostgreSQL)" vertex="1">
+          <mxGeometry height="30" width="280" x="440" y="668" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_golden" parent="1" style="shape=table;startSize=30;container=0;collapsible=0;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=0;fillColor=#d5e8d4;strokeColor=#82b366;whiteSpace=wrap;html=1;fontSize=11;" value="&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;golden_knowledge&lt;/span&gt;&lt;/div&gt;&lt;br&gt;question&lt;br&gt;sql&lt;br&gt;report" vertex="1">
+          <mxGeometry height="100" width="180" x="240" y="710" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_prefs" parent="1" style="shape=table;startSize=30;container=0;collapsible=0;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=0;fillColor=#dae8fc;strokeColor=#6c8ebf;whiteSpace=wrap;html=1;fontSize=11;" value="&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;user_preferences&lt;br&gt;&lt;br&gt;user_id&lt;br&gt;personal_preferences&lt;br&gt;updated_at" vertex="1">
+          <mxGeometry height="100" width="200" x="440" y="710" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_logs" parent="1" style="shape=table;startSize=30;container=0;collapsible=0;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=0;fillColor=#fff2cc;strokeColor=#d6b656;whiteSpace=wrap;html=1;fontSize=11;" value="&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;interaction_logs&lt;/span&gt;&lt;/div&gt;&lt;br&gt;user_id, timestamp&lt;br&gt;question, generated_sql&lt;br&gt;result, report,&lt;br&gt;error_count, retry_count&lt;br&gt;pii_blocks, intent" vertex="1">
+          <mxGeometry height="115" width="200" x="240" y="845" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_reports" parent="1" style="shape=table;startSize=30;container=0;collapsible=0;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=0;fillColor=#f8cecc;strokeColor=#b85450;whiteSpace=wrap;html=1;fontSize=11;" value="&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;saved_reports&lt;br&gt;&lt;br&gt;user_id&lt;br&gt;title&lt;br&gt;report_content&lt;br&gt;created_at" vertex="1">
+          <mxGeometry height="100" width="190" x="660" y="710" as="geometry" />
+        </mxCell>
+        <mxCell id="tbl_persona" parent="1" style="shape=table;startSize=30;container=0;collapsible=0;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=0;fillColor=#e1d5e7;strokeColor=#9673a6;whiteSpace=wrap;html=1;fontSize=11;" value="&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;application_persona_config&lt;/span&gt;&lt;/div&gt;&lt;br&gt;tone&lt;br&gt;report_style&lt;br&gt;updated_by" vertex="1">
+          <mxGeometry height="100" width="180" x="870" y="710" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_client_agent" edge="1" parent="1" source="client" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=classic;endFill=1;startArrow=classic;startFill=1;strokeWidth=2;strokeColor=#6c8ebf;fontSize=11;fontStyle=0;labelBackgroundColor=#ffffff;" target="agent_container" value="user_id + question">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="650" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arr_agent_gemini" edge="1" parent="1" source="agent_container" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=classic;endFill=1;startArrow=classic;startFill=1;strokeWidth=2;strokeColor=#9673a6;fontSize=10;fontStyle=0;labelBackgroundColor=#ffffff;" target="gemini" value="&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;">
+          <mxGeometry relative="1" y="40" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arr_agent_bq" edge="1" parent="1" source="agent_container" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=classic;endFill=1;startArrow=classic;startFill=1;strokeWidth=2;strokeColor=#82b366;fontSize=11;fontStyle=0;labelBackgroundColor=#ffffff;" target="bigquery" value="SQL queries&#xa;(read-only)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_agent_db" edge="1" parent="1" source="agent_container" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=classic;endFill=1;startArrow=classic;startFill=1;strokeWidth=2;strokeColor=#d6b656;fontSize=10;fontStyle=0;labelBackgroundColor=#ffffff;" target="appdb_container" value="Read/Write&#xa;(golden knowledge, preferences,&#xa;logs, reports, persona)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_pref_update" edge="1" parent="1" source="tbl_logs" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic;endFill=1;strokeWidth=1;strokeColor=#6c8ebf;dashed=1;dashPattern=8 4;fontSize=10;fontStyle=2;labelBackgroundColor=#ffffff;" target="tbl_prefs" value="Batch update every&#xa;10 unprocessed interactions">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="540" y="920" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="LL7Gt9UFqr6Zglu7XBF_-1" edge="1" parent="1" source="admin_user" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=12;startSize=8;endSize=8;" target="appdb_container" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="admin_user" parent="1" style="shape=mxgraph.basic.person;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;fontStyle=1;align=center;" value="Admin / CEO&#xa;(Non-developer)" vertex="1">
+          <mxGeometry height="80" width="80" x="1210" y="772.5" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_container" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fafafa;strokeColor=#cccccc;strokeWidth=1;" value="" vertex="1">
+          <mxGeometry height="180" width="250" x="40" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_title" parent="1" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=12;fontStyle=1;fontColor=#333333;" value="Requirements Mapping" vertex="1">
+          <mxGeometry height="26" width="160" x="50" y="44" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_items" parent="1" style="text;html=1;align=left;verticalAlign=top;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=10;fontStyle=0;fontColor=#555555;spacingLeft=4;" value="1. Hybrid Intelligence → Golden Knowledge&lt;br&gt;2. PII Masking → SQL Executor + PII Filter&lt;br&gt;3. High-Stakes Oversight → Report Manager&lt;br&gt;4. Continuous Improvement →&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;User: Preference Updater (batch/10)&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;System: Golden Bucket → Curation&lt;br&gt;5. Resilience → SQL retry loop (max 3)&lt;br&gt;6. Quality Assurance → SQL Validator&lt;br&gt;7. Logging → Interaction Logger&lt;br&gt;8. Persona → persona_config table" vertex="1">
+          <mxGeometry height="130" width="220" x="50" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="LL7Gt9UFqr6Zglu7XBF_-2" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontSize=16;" value="&lt;span style=&quot;font-size: 10px; font-style: italic; text-wrap-mode: nowrap; background-color: rgb(255, 255, 255);&quot;&gt;Edit tone/style&lt;/span&gt;&lt;br style=&quot;font-size: 10px; font-style: italic; text-wrap-mode: nowrap;&quot;&gt;&lt;span style=&quot;font-size: 10px; font-style: italic; text-wrap-mode: nowrap; background-color: rgb(255, 255, 255);&quot;&gt;(no code deploy)&lt;/span&gt;" vertex="1">
+          <mxGeometry height="50" width="60" x="1120" y="807.5" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
 </mxfile>
