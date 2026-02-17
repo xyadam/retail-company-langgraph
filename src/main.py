@@ -5,7 +5,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from rich.console import Console
 from typing import Any
 from langchain_core.messages import HumanMessage
-from src.graph import graph
+from langgraph.checkpoint.memory import MemorySaver
+from src.graph import workflow
 from src.console import print_report
 
 console = Console()
@@ -16,6 +17,8 @@ console = Console()
 ###########################################################################
 
 def main():
+    # For CLI usage we provide our own checkpointer in the main.
+    graph = workflow.compile(checkpointer=MemorySaver())
     thread_config = {"configurable": {"thread_id": "1"}}
 
     console.print("\n[bold cyan]OpsFleet Data Analysis Agent[/bold cyan]")
