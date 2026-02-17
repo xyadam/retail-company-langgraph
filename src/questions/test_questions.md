@@ -1,3 +1,8 @@
+# Question that makes it create wrong SQL first:
+How many jeans were sold alltogether in the past 1 year?
+
+---
+
 # Test Questions for OpsFleet Data Analysis Agent
 
 These questions are curated to demonstrate the agent's core capabilities:
