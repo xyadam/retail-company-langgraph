@@ -1,10 +1,14 @@
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
 from rich.console import Console
 from typing import Any, cast
 from langchain_core.messages import HumanMessage
 from langchain_core.runnables import RunnableConfig
-from graph import build_graph
-from state import AgentState
-from console import print_report
+from src.graph import graph
+from src.state import AgentState
+from src.console import print_report
 
 console = Console()
 
@@ -14,7 +18,6 @@ console = Console()
 ###########################################################################
 
 def main():
-    graph = build_graph()
     thread_config = {"configurable": {"thread_id": "1"}}
 
     console.print("\n[bold cyan]OpsFleet Data Analysis Agent[/bold cyan]")

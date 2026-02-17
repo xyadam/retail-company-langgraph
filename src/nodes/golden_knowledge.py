@@ -1,6 +1,6 @@
 import json
-from config import SRC
-from state import AgentState
+from src.config import SRC
+from src.state import AgentState
 
 
 def golden_knowledge(state: AgentState) -> dict:

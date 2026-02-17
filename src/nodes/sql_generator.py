@@ -1,9 +1,9 @@
 from datetime import datetime
 from langchain_core.messages import SystemMessage, HumanMessage
 
-from state import AgentState
-from config import llm, load_db_schema
-from console import print_sql
+from src.state import AgentState
+from src.config import llm, load_db_schema
+from src.console import print_sql
 
 schema_text = load_db_schema()
 

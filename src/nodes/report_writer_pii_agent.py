@@ -15,8 +15,8 @@ from langchain.agents.middleware import PIIMiddleware
 from langchain_core.messages import AIMessage
 from langgraph.checkpoint.memory import InMemorySaver
 
-from state import AgentState
-from config import llm, load_persona
+from src.state import AgentState
+from src.config import llm, load_persona
 
 
 ###########################################################################

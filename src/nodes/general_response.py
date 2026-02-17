@@ -1,6 +1,6 @@
 from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
-from state import AgentState
-from config import llm
+from src.state import AgentState
+from src.config import llm
 
 
 def general_response(state: AgentState) -> dict:

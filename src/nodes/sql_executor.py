@@ -1,12 +1,12 @@
 import warnings
 warnings.filterwarnings("ignore", message="BigQuery Storage module not found")
 
-from state import AgentState
-from config import PII_COLUMNS, MAX_RETRIES
-from database.bq_client import BigQueryRunner
+from src.state import AgentState
+from src.config import PII_COLUMNS, MAX_RETRIES
+from src.database.bq_client import BigQueryRunner
 
 bq = BigQueryRunner()
-from console import print_step, print_error
+from src.console import print_step, print_error
 
 ########  Ensureing PII information is not exposed in SQL queries  ########
 def validate_sql(sql: str) -> dict:

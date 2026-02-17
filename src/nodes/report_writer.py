@@ -1,8 +1,7 @@
 import json
 from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
-from state import AgentState
-from config import llm
-from config import load_persona
+from src.state import AgentState
+from src.config import llm, load_persona
 
 
 def report_writer(state: AgentState) -> dict:
