@@ -3,11 +3,9 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from rich.console import Console
-from typing import Any, cast
+from typing import Any
 from langchain_core.messages import HumanMessage
-from langchain_core.runnables import RunnableConfig
 from src.graph import graph
-from src.state import AgentState
 from src.console import print_report
 
 console = Console()
@@ -40,7 +38,7 @@ def main():
             "error_message": "",
             "generated_sql": "",
         }
-        result = graph.invoke(cast(AgentState, payload), config=cast(RunnableConfig, thread_config))
+        result = graph.invoke(payload, config=thread_config)
         print_report(result["final_report"])
 
 
