@@ -1,6 +1,9 @@
 import warnings
 warnings.filterwarnings("ignore", message="BigQuery Storage module not found")
 
+import sqlglot
+from sqlglot import exp
+
 from src.state import AgentState
 from src.config import PII_COLUMNS, MAX_RETRIES
 from src.database.bq_client import BigQueryRunner
@@ -8,17 +11,24 @@ from src.database.bq_client import BigQueryRunner
 bq = BigQueryRunner()
 from src.console import print_step, print_error
 
+
 ########  Ensureing PII information is not exposed in SQL queries  ########
 def validate_sql(sql: str) -> dict:
-    """Validate SQL query. Returns dict with 'valid' bool and 'error' message."""
-    lowered = sql.lower()
+    """Parse SQL AST with sqlglot and block queries that reference PII columns."""
+    parsed = sqlglot.parse_one(sql, dialect="bigquery")
 
-    if "select *" in lowered or ".*" in lowered:
-        return {"valid": False, "error": "Wildcard select is not allowed. Select explicit columns only."}
+    # Block SELECT * and table.* but allow COUNT(*) by checking the parent node type
+    for star in parsed.find_all(exp.Star):
+        if not isinstance(star.parent, exp.Count):
+            return {"valid": False, "error": "Wildcard select is not allowed. Select explicit columns only."}
 
-    for col in PII_COLUMNS:
-        if col.lower() in lowered:
-            return {"valid": False, "error": f"PII column '{col}' is not allowed."}
+    # Only block PII columns that appear raw in SELECT — aggregates like COUNT(email) are safe
+    AGGREGATES = (exp.Count, exp.Sum, exp.Avg, exp.Min, exp.Max)
+    for select_expr in parsed.find_all(exp.Select):
+        for column in select_expr.expressions:
+            for col_ref in column.find_all(exp.Column):
+                if col_ref.name.lower() in PII_COLUMNS and not col_ref.find_ancestor(*AGGREGATES):
+                    return {"valid": False, "error": f"PII column '{col_ref.name}' in SELECT is not allowed."}
 
     return {"valid": True, "error": ""}
 

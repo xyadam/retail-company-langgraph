@@ -215,13 +215,17 @@ class AgentState(TypedDict):
     final_report: str
 ```
 
-### 2. PII Masking (pii_filter node)
+### 2. PII Masking (sqlglot AST validation + pandas column drop)
 
 Blocked columns (from `users` table):
 - `email`, `first_name`, `last_name`, `street_address`
 
 City, state, country, postal_code are allowed for grouping/filtering (not personal PII).
-Defense in depth: SQL Generator prompt avoids PII + `pii_filter` node drops PII columns from results using pandas.
+
+**Defense in depth (3 layers):**
+1. **SQL Generator prompt** instructs the LLM to never SELECT PII columns
+2. **sqlglot AST validation** (`validate_sql` in `sql_executor.py`) parses the generated SQL into an AST and checks only the SELECT clause column references against the PII blocklist. This avoids false positives from substring matching (e.g. `email_count` won't match `email`). PII columns in WHERE, GROUP BY, JOIN, or inside aggregates like COUNT(email) are allowed since they don't expose values in the output.
+3. **pandas column drop** as a final safety net removes any PII columns from query results before passing to the report writer
 
 ### 3. Self-Correction Loop
 
@@ -324,6 +328,7 @@ renders the interrupt as a message and provides an input field for the user resp
 - **LangGraph** - Agent orchestration (nodes, edges, state, cycles)
 - **LangChain** - Model abstraction, tool decorators
 - **Gemini 2.5 Flash** - LLM (via `langchain-google-genai`)
+- **sqlglot** - SQL AST parser for PII column detection (no false positives)
 - **BigQuery** - Data warehouse (via provided `BigQueryRunner`)
 - **CLI** - Simple `input()` loop (no UI needed)
 - **MemorySaver** - In-memory checkpointer for conversation continuity across turns
@@ -391,7 +396,7 @@ No database, no persistence across restarts — appropriate for a prototype CLI 
 ## Implementation Notes
 
 1. **Keep it simple** - Assignment warns against over-engineering
-2. **Defense in depth for PII** - System prompt tells LLM to avoid PII + hard filter on results
+2. **Defense in depth for PII** - System prompt tells LLM to avoid PII + sqlglot AST validation blocks PII in SELECT + pandas column drop as final safety net
 3. **Retry with context** - On SQL error, pass error message to LLM for fix
 4. **Graceful failure** - After 3 retries, apologize and suggest rephrasing
 5. **Logging** - Print SQL queries and errors to console for debugging
@@ -409,7 +414,7 @@ Full LangGraph agent implemented and tested. All nodes working end-to-end:
 - **Router** classifies intent (data_query vs general) via Gemini structured prompt
 - **SQL Generator** produces BigQuery SQL using schema + golden knowledge few-shot examples, with self-correction on retry
 - **SQL Executor** runs queries via BigQueryRunner, feeds errors back for retry loop (max 3)
-- **PII Filter** drops PII columns from results using pandas, appends to collected_data
+- **PII Filter** uses sqlglot to parse SQL AST and block PII columns in SELECT (allows PII in WHERE/GROUP BY/aggregates), plus pandas column drop as safety net
 - **Report Writer** formats executive reports using persona.yaml tone/style settings
 - **General Response** handles non-data questions
 - **MemorySaver** checkpointer enables conversation continuity across turns
