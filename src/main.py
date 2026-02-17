@@ -6,6 +6,8 @@ from rich.console import Console
 from typing import Any
 from langchain_core.messages import HumanMessage
 from langgraph.checkpoint.memory import MemorySaver
+from langgraph.types import Command
+
 from src.graph import workflow
 from src.console import print_report
 
@@ -17,7 +19,6 @@ console = Console()
 ###########################################################################
 
 def main():
-    # For CLI usage we provide our own checkpointer in the main.
     graph = workflow.compile(checkpointer=MemorySaver())
     thread_config = {"configurable": {"thread_id": "1"}}
 
@@ -42,6 +43,14 @@ def main():
             "generated_sql": "",
         }
         result = graph.invoke(payload, config=thread_config)
+
+        ################### Handle interrupt loop (human-in-the-loop) ###################
+        while result.get("__interrupt__"):
+            confirmation_msg = result["__interrupt__"][0].value
+            console.print(f"\n[bold yellow]{confirmation_msg}[/bold yellow]")
+            answer = console.input("[bold]Confirm:[/bold] ").strip()
+            result = graph.invoke(Command(resume=answer), config=thread_config)
+
         print_report(result["final_report"])
 
 

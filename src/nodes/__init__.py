@@ -4,3 +4,4 @@ from src.nodes.sql_generator import sql_generator
 from src.nodes.sql_executor import sql_executor
 from src.nodes.report_writer import report_writer
 from src.nodes.general_response import general_response
+from src.nodes.delete_reports import delete_reports
