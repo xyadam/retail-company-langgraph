@@ -9,7 +9,7 @@ def report_writer(state: AgentState) -> dict:
     persona = load_persona()
 
     # If all retries failed, tell the user
-    if state["error_message"]:
+    if state.get("error_message"):
         content = f"I couldn't retrieve the data. Try rephrasing your question.\nError: {state['error_message']}"
         return {"final_report": content, "messages": [AIMessage(content=content)]}
 

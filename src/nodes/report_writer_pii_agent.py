@@ -48,7 +48,7 @@ def report_writer_pii_agent(state: AgentState) -> dict:
     """Write executive report using LangChain agent with PII middleware."""
     persona = load_persona()
 
-    if state["error_message"]:
+    if state.get("error_message"):
         content = f"I couldn't retrieve the data. Try rephrasing your question.\nError: {state['error_message']}"
         return {"final_report": content, "messages": [AIMessage(content=content)]}
 

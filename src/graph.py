@@ -13,7 +13,7 @@ from src.nodes import (
 ###########################################################################
 
 def route_by_intent(state: AgentState) -> str:
-    if state["intent"] == "general":
+    if state.get("intent") == "general":
         return "general_response"
     return "golden_knowledge"
 

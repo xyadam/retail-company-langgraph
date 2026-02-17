@@ -26,12 +26,13 @@ def validate_sql(sql: str) -> dict:
 ######## SQL Executor Node: Executes SQL and returns sanitized rows ########
 def sql_executor(state: AgentState) -> dict:
     """Execute SQL and return sanitized rows."""
+    retry_count = state.get("retry_count", 0)
     try:
-        validation = validate_sql(state["generated_sql"])
+        validation = validate_sql(state.get("generated_sql", ""))
         if not validation["valid"]:
             raise ValueError(validation["error"])
 
-        df = bq.execute_query(state["generated_sql"])
+        df = bq.execute_query(state.get("generated_sql", ""))
 
         # PII filter
         dropped = [c for c in df.columns if c.lower() in PII_COLUMNS]
@@ -43,11 +44,11 @@ def sql_executor(state: AgentState) -> dict:
 
         # Empty results count as a retry so sql_generator can adjust the query
         if not rows:
-            print_error(f"Retry {state['retry_count'] + 1}/{MAX_RETRIES}: query returned 0 rows")
-            return {"rows": [], "error_message": "Query returned 0 rows, try a broader query.", "retry_count": state["retry_count"] + 1}
+            print_error(f"Retry {retry_count + 1}/{MAX_RETRIES}: query returned 0 rows")
+            return {"rows": [], "error_message": "Query returned 0 rows, try a broader query.", "retry_count": retry_count + 1}
 
-        return {"rows": rows, "error_message": "", "retry_count": state["retry_count"]}
+        return {"rows": rows, "error_message": "", "retry_count": retry_count}
 
     except Exception as e:
-        print_error(f"Retry {state['retry_count'] + 1}/{MAX_RETRIES}: {str(e)}")
-        return {"error_message": str(e), "retry_count": state["retry_count"] + 1, "rows": []}
+        print_error(f"Retry {retry_count + 1}/{MAX_RETRIES}: {str(e)}")
+        return {"error_message": str(e), "retry_count": retry_count + 1, "rows": []}
