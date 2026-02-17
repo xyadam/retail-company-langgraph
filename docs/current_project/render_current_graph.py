@@ -16,7 +16,7 @@ class AgentState(TypedDict):
     rows: list
     error_message: str
     retry_count: int
-    final_response: str
+    final_report: str
 
 
 MAX_RETRIES = 3
@@ -27,7 +27,7 @@ MAX_RETRIES = 3
 ###########################################################################
 
 def router(state: AgentState) -> AgentState:
-    """Classifies user intent as data_query or general using LLM."""
+    """Classifies user intent as data_query, general, or delete using LLM."""
     return state
 
 
@@ -60,6 +60,12 @@ def general_response(state: AgentState) -> AgentState:
     return state
 
 
+def delete_reports(state: AgentState) -> AgentState:
+    """Mock report deletion with interrupt() confirmation flow.
+    High-stakes oversight: requires user confirmation before destructive action."""
+    return state
+
+
 ###########################################################################
 ##                       CONDITIONAL EDGES
 ###########################################################################
@@ -67,6 +73,8 @@ def general_response(state: AgentState) -> AgentState:
 def route_by_intent(state: AgentState) -> str:
     if state.get("intent") == "general":
         return "general_response"
+    if state.get("intent") == "delete":
+        return "delete_reports"
     return "golden_knowledge"
 
 
@@ -89,12 +97,14 @@ workflow.add_node("sql_generator", sql_generator)
 workflow.add_node("sql_executor", sql_executor)
 workflow.add_node("report_writer", report_writer)
 workflow.add_node("general_response", general_response)
+workflow.add_node("delete_reports", delete_reports)
 
 workflow.add_edge(START, "router")
 
 workflow.add_conditional_edges("router", route_by_intent, {
     "golden_knowledge": "golden_knowledge",
     "general_response": "general_response",
+    "delete_reports": "delete_reports",
 })
 
 workflow.add_edge("golden_knowledge", "sql_generator")
@@ -106,10 +116,10 @@ workflow.add_conditional_edges("sql_executor", route_after_execution, {
 
 workflow.add_edge("report_writer", END)
 workflow.add_edge("general_response", END)
+workflow.add_edge("delete_reports", END)
 
-# Compile and render
 graph = workflow.compile()
 
-output_path = r"C:\Users\xyada\Desktop\opsfleet langgraph\docs\current_project\langgraph_flow.png"
+output_path = r"C:\Users\xyada\Desktop\retail-company-langgraph\docs\current_project\langgraph_flow.png"
 graph.get_graph().draw_mermaid_png(output_file_path=output_path)
 print(f"Graph saved to: {output_path}")
