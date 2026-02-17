@@ -1,4 +1,5 @@
 from langgraph.graph import StateGraph, START, END
+from langgraph.checkpoint.memory import MemorySaver
 
 from src.state import AgentState
 from src.config import MAX_RETRIES
@@ -54,4 +55,4 @@ workflow.add_conditional_edges("sql_executor", route_after_execution, {
 workflow.add_edge("report_writer", END)
 workflow.add_edge("general_response", END)
 
-graph = workflow.compile()
+graph = workflow.compile(checkpointer=MemorySaver())
