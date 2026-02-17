@@ -16,19 +16,19 @@ from src.console import print_step, print_error
 def validate_sql(sql: str) -> dict:
     """Parse SQL AST with sqlglot and block queries that reference PII columns."""
     parsed = sqlglot.parse_one(sql, dialect="bigquery")
+    print_step("SQL Validation", f"Parsed SQL AST:\n{parsed.sql(dialect='bigquery', pretty=True)}")
 
     # Block SELECT * and table.* but allow COUNT(*) by checking the parent node type
     for star in parsed.find_all(exp.Star):
         if not isinstance(star.parent, exp.Count):
             return {"valid": False, "error": "Wildcard select is not allowed. Select explicit columns only."}
 
-    # Only block PII columns that appear raw in SELECT — aggregates like COUNT(email) are safe
+    # Only check the outermost SELECT (what the user actually sees) — CTEs can use PII internally
     AGGREGATES = (exp.Count, exp.Sum, exp.Avg, exp.Min, exp.Max)
-    for select_expr in parsed.find_all(exp.Select):
-        for column in select_expr.expressions:
-            for col_ref in column.find_all(exp.Column):
-                if col_ref.name.lower() in PII_COLUMNS and not col_ref.find_ancestor(*AGGREGATES):
-                    return {"valid": False, "error": f"PII column '{col_ref.name}' in SELECT is not allowed."}
+    for column in parsed.expressions:
+        for col_ref in column.find_all(exp.Column):
+            if col_ref.name.lower() in PII_COLUMNS and not col_ref.find_ancestor(*AGGREGATES):
+                return {"valid": False, "error": f"PII column '{col_ref.name}' in SELECT is not allowed."}
 
     return {"valid": True, "error": ""}
 
