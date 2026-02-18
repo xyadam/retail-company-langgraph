@@ -5,6 +5,8 @@ from src.state import AgentState
 from src.config import llm, load_db_schema
 from src.console import print_sql
 
+
+
 schema_text = load_db_schema()
 
 
