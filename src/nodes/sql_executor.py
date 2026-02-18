@@ -44,12 +44,15 @@ def sql_executor(state: AgentState) -> dict:
 
         df = bq.execute_query(state.get("generated_sql", ""))
 
-        # PII filter
+
+        ###### Second Layer of PII filter #######
         dropped = [c for c in df.columns if c.lower() in PII_COLUMNS]
         if dropped:
             df = df.drop(columns=dropped)
             print_step("PII Filter", f"[yellow]Removed columns:[/yellow] {dropped}")
 
+
+        ###### Convert back to list of dicts to AgentState usable ######
         rows = df.to_dict(orient="records")
 
         # Empty results count as a retry so sql_generator can adjust the query
